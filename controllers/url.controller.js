@@ -3,7 +3,9 @@ import Url from "../models/url.model.js";
 
 async function createShortUrl(req, res) {
     const body = req.body;
-    if(!body.redirectUrl) {
+    console.log("Inside createShortUrl", body);
+
+    if (!body.redirectUrl) {
         return res.status(400).json({
             status: "error",
             message: "redirectUrl is required"
@@ -15,7 +17,7 @@ async function createShortUrl(req, res) {
         shortId,
         redirectUrl: body.redirectUrl
     });
-    return res.status(201).json({ shortId });
+    return res.status(201).render('home', { shortId });
 }
 
 async function redirect(req, res) {
@@ -56,8 +58,14 @@ async function getAnalytics(req, res) {
     });
 }
 
+async function getAllUrls(req, res) {
+    const allUrls = await Url.find();
+    return res.render('home', { urls: allUrls });
+}
+
 export {
     createShortUrl,
     redirect,
-    getAnalytics
+    getAnalytics,
+    getAllUrls,
 };

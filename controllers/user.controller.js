@@ -1,5 +1,4 @@
 import User from "../models/user.model.js";
-import { v4 as uuidv4 } from 'uuid';
 import { setSessionId } from "../utils/auth.util.js";
 
 async function signupUser(req, res) {
@@ -28,9 +27,8 @@ async function loginUser(req, res) {
             message: "Invalid credentials"
         });
     }
-    const sessionId = uuidv4();
-    setSessionId(sessionId, user);
-    res.cookie('sessionId', sessionId)
+    const token = setSessionId(user);
+    res.cookie('uid', token)
 
     return res.redirect('/');
 }

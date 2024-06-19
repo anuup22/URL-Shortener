@@ -1,11 +1,11 @@
 import { getSessionId } from "../utils/auth.util.js";
 
 async function restrictToAuthUser(req, res, next) {
-    const sessionId = req.cookies?.sessionId;
-    if (!sessionId) {
+    const token = req.cookies?.uid;
+    if (!token) {
         return res.redirect('/login');
     }
-    const user = getSessionId(sessionId);
+    const user = getSessionId(token);
     if (!user) {
         return res.redirect('/login');
     }
@@ -14,8 +14,8 @@ async function restrictToAuthUser(req, res, next) {
 }
 
 async function checkAuthUser(req, res, next) {
-    const sessionId = req.cookies?.sessionId;
-    const user = getSessionId(sessionId);
+    const token = req.cookies?.uid;
+    const user = getSessionId(token);
     
     req.user = user;
     next();

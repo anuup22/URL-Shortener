@@ -3,7 +3,9 @@ import Url from "../models/url.model.js";
 
 async function createShortUrl(req, res) {
     const body = req.body;
-    if(!body.redirectUrl) {
+    console.log("Inside createShortUrl", body);
+
+    if (!body.redirectUrl) {
         return res.status(400).json({
             status: "error",
             message: "redirectUrl is required"
@@ -16,7 +18,7 @@ async function createShortUrl(req, res) {
         redirectUrl: body.redirectUrl,
         user: req.user._id
     });
-    return res.status(201).json({ shortId });
+    return res.status(201).render('home', { shortId });
 }
 
 async function redirect(req, res) {
@@ -59,7 +61,6 @@ async function getAnalytics(req, res) {
     });
 }
 
-<<<<<<< HEAD
 async function getAllUrls(req, res) {
     if(!req.user) {
         return res.redirect('/login');
@@ -69,10 +70,9 @@ async function getAllUrls(req, res) {
     return res.render('home', { urls: allUrls });
 }
 
-=======
->>>>>>> parent of 6060d44 (SSR: views done)
 export {
     createShortUrl,
     redirect,
-    getAnalytics
+    getAnalytics,
+    getAllUrls,
 };

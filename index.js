@@ -1,6 +1,5 @@
 import express from 'express';
 import 'dotenv/config';
-import urlRoute from './routes/url.route.js';
 import dbConnect from './DB/dbConnect.js';
 import { redirect } from './controllers/url.controller.js';
 import cookieParser from 'cookie-parser';
@@ -11,13 +10,22 @@ import urlRoute from './routes/url.route.js';
 import staticRoute from './routes/static.route.js';
 
 dbConnect();
+console.log('JWT Secret : ', process.env.JWT_SECRET);
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cookieParser());
 app.use(express.json());
-app.use('/url', urlRoute);
-app.get('/:shortId', redirect);
+app.use(express.urlencoded({ extended: false }));
+
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+app.use('/', checkAuthUser, staticRoute);
+app.use('/url', restrictToAuthUser, urlRoute);
+app.use('/user', userRoute);
+
+app.get('/url/:shortId', redirect);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

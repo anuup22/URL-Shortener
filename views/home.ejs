@@ -15,11 +15,11 @@
     <body>
         <h1>URL Shortener</h1>
         <% if (locals.shortId) { %>
-            <p>URL Generated: http://localhost:3001/url/<%= shortId %></p>
+            <p>URL Generated: http://localhost:8000/url/<%= shortId %></p>
         <% } %>
 
         <div>
-            <form method="POST" action="/url">
+            <form method="post" action="/url">
                 <label>Enter Your Original URL</label>
                 <input type="text" name="redirectUrl" placeholder="https://example.com" />
                 <button type="submit">Generate</button>
@@ -30,9 +30,9 @@
                 <table>
                     <thead>
                         <th>S.No</th>
-                        <th>ShortID</th>
-                        <th>Redirect</th>
-                        <th>Clicks</th>
+                        <th>ShortId</th>
+                        <th>RedirectUrl</th>
+                        <th>Visits</th>
                     </thead>
                     <tbody>
                         <% urls.forEach((url, index) => { %>

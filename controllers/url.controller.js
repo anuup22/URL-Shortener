@@ -15,7 +15,8 @@ async function createShortUrl(req, res) {
 
     await Url.create({
         shortId,
-        redirectUrl: body.redirectUrl
+        redirectUrl: body.redirectUrl,
+        user: req.user._id
     });
     return res.status(201).render('home', { shortId });
 }
@@ -37,7 +38,9 @@ async function redirect(req, res) {
             {
                 visits: { timestamp: Date.now() }
             }
-        });
+        }
+    );
+    console.log("Redirecting to", url.redirectUrl);
     return res.redirect(url.redirectUrl);
 }
 
@@ -59,7 +62,11 @@ async function getAnalytics(req, res) {
 }
 
 async function getAllUrls(req, res) {
-    const allUrls = await Url.find();
+    if(!req.user) {
+        return res.redirect('/login');
+    }
+
+    const allUrls = await Url.find({ user: req.user._id });
     return res.render('home', { urls: allUrls });
 }
 

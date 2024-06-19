@@ -1,14 +1,15 @@
 import jwt from 'jsonwebtoken';
 const secret = process.env.JWT_SECRET;
 
-function setSessionId(user) {
+function setUser(user) {
   return jwt.sign({
     _id: user._id,
-    email: user.email
+    email: user.email,
+    role: user.role,
   }, secret);
 }
 
-function getSessionId(token) {
+function getUser(token) {
   try {
     return jwt.verify(token, secret);
   }
@@ -18,6 +19,6 @@ function getSessionId(token) {
 }
 
 export {
-  setSessionId,
-  getSessionId
+  setUser,
+  getUser
 };

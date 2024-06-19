@@ -1,27 +1,33 @@
-import { getSessionId } from "../utils/auth.util.js";
+import { getUser } from "../utils/auth.util.js";
 
-async function restrictToAuthUser(req, res, next) {
+function checkForAuthentication(req, res, next) {
+    // const authorizationHeaderValue = req.headers['authorization'];
     const token = req.cookies?.uid;
+    req.user = null;
+
     if (!token) {
-        return res.redirect('/login');
+        return next();
     }
-    const user = getSessionId(token);
-    if (!user) {
-        return res.redirect('/login');
-    }
+    // const token = authorizationHeaderValue.split('Bearer ')[1];
+    const user = getUser(token);
+   
     req.user = user;
-    next();
+    return next();
 }
 
-async function checkAuthUser(req, res, next) {
-    const token = req.cookies?.uid;
-    const user = getSessionId(token);
-    
-    req.user = user;
-    next();
+function restrictTo(roles) {
+    return function (req, res, next) {
+        if (!req.user) {
+            return res.redirect('/login');
+        }
+        if(!roles.includes(req.user.role)) {
+            return res.end('You are not authorized to perform this action');
+        }
+        return next();
+    }
 }
 
 export {
-    restrictToAuthUser,
-    checkAuthUser
+    checkForAuthentication,
+    restrictTo
 }
